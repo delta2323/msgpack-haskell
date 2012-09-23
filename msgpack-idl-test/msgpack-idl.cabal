@@ -13,7 +13,7 @@ stability:           Experimental
 cabal-version:       >=1.8
 build-type:          Simple
 
-extra-source-files:  mpidl.peggy
+extra-source-files:  mpidl-test.peggy
 
 source-repository head
   type:                git
@@ -55,7 +55,7 @@ executable mpidl-gentest
                      , directory >= 1.0 && < 1.2
                      , cmdargs   == 0.9.*
                      , peggy     == 0.3.*
-                     , msgpack-idl
+                     , msgpack-idl-test
 
 test-suite mpidl-test
   type:                exitcode-stdio-1.0
@@ -64,4 +64,4 @@ test-suite mpidl-test
 
   build-depends:       base      == 4.*
                      , hspec     >= 1.1
-                     , msgpack-idl
+                     , msgpack-idl-test
