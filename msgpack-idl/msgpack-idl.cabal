@@ -67,3 +67,14 @@ test-suite mpidl-test
   build-depends:       base      == 4.*
                      , hspec     >= 1.1
                      , msgpack-idl
+
+test-suite generate-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             generate_test.hs
+
+  build-depends:       base      == 4.*
+                     , directory >= 1.0
+                     , process >= 1.1
+                     , filepath >= 1.3
+                     , msgpack-idl
