@@ -5,7 +5,7 @@ description:         Unittest Generator of MessagePack-IDL <https://github.com/m
 homepage:            https://github.com/msgpack/msgpack-haskell/tree/master/msgpack-idl
 license:             BSD3
 license-file:        LICENSE
-author:              Kenta OONO
+author:              Hideyuki Tanaka, Kenta OONO
 maintainer:          Kenta OONO <oono@preferrerd.jp>
 copyright:           Copyright (c) 2012, Kenta OONO
 category:            Language
