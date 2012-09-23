@@ -5,6 +5,8 @@ import Data.Version
 import System.Console.CmdArgs
 import Text.Peggy
 
+import System.Exit
+
 import Language.MessagePack.IDL
 import Language.MessagePack.IDL.Internal
 import qualified Language.MessagePack.IDL.CodeGen.Haskell as Haskell
@@ -100,14 +102,15 @@ main = do
     &= help "MessagePack RPC IDL Compiler"
     &= summary ("mpidl " ++ showVersion version)
 
-  compile conf
+  (compile conf) >>= exitWith
 
-compile :: MPIDL -> IO ()
+compile :: MPIDL -> IO ExitCode
 compile conf = do
   espec <- parseFile idl (filepath conf)
   case espec of
     Left err -> do
       print err
+      return $ ExitFailure 1
     Right spec -> do
       print spec
       withDirectory (output_dir conf) $ do
@@ -135,4 +138,4 @@ compile conf = do
           
           Erlang {..} -> do
             Erlang.generate (Erlang.Config filepath) spec
-
+      return $ ExitSuccess
