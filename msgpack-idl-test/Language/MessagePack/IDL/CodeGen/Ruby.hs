@@ -28,13 +28,13 @@ generate:: Config -> Spec -> IO ()
 generate Config {..} TestSet {..} = do
   let body = LT.unlines (map genTest testCases)
       testClassName = (capitalize testSetName) ++ "Test"
-  LT.writeFile "test.py" $ templ configFilePath [lt|
+  LT.writeFile "test.rb" $ templ configFilePath [lt|
 #!/usr/bin/env ruby
 
 require 'test/unit'
 DIR = File.dirname(__FILE__)
-require "#\{DIR}/test_target/client.rb"
-require "#\{DIR}/test_target/types.rb"
+require "#\{DIR}/test_target/client"
+require "#\{DIR}/test_target/types"
 
 HOST = "localhost"
 PORT = 5000
