@@ -104,18 +104,18 @@ genStruct :: [(T.Text, Type)] -> Config -> Decl -> IO()
 genStruct alias Config{..} MPMessage {..} = do
   let params = if null msgParam then "" else [lt|<#{T.intercalate ", " msgParam}>|]
       resolvedMsgFields = map (resolveFieldAlias alias) msgFields
-      hashMapImport | not $ null [() | TMap _ _ <- map fldType resolvedMsgFields] = [lt|import java.util.HashMap;|]
-                    | otherwise = ""
-      arrayListImport | not $ null [() | TList _ <- map fldType resolvedMsgFields] = [lt|import java.util.ArrayList;|]
-                      | otherwise = ""
+      mapImport | not $ null [() | TMap _ _ <- map fldType resolvedMsgFields] = [lt|import java.util.Map;|]
+                | otherwise = ""
+      listImport | not $ null [() | TList _ <- map fldType resolvedMsgFields] = [lt|import java.util.List;|]
+                 | otherwise = ""
       dirName = joinPath $ map LT.unpack $ LT.split (== '.') $ LT.pack configPackage
       fileName =  dirName ++ "/" ++ (T.unpack $ formatClassNameT msgName) ++ ".java"
 
   LT.writeFile fileName $ templ configFilePath [lt|
 package #{configPackage};
 
-#{hashMapImport}
-#{arrayListImport}
+#{mapImport}
+#{listImport}
 import org.msgpack.MessagePack;
 import org.msgpack.annotation.Message;
 
@@ -190,18 +190,18 @@ genException _ _ _  = return ()
 genClient :: [(T.Text, Type)] -> Config -> Decl -> IO()
 genClient alias Config {..} MPService {..} = do 
   let resolvedServiceMethods = map (resolveMethodAlias alias) serviceMethods
-      hashMapImport | not $ null [() | TMap _ _ <- map methodRetType resolvedServiceMethods ] = [lt|import java.util.HashMap;|]
-                    | otherwise = ""
-      arrayListImport | not $ null [() | TList _ <- map methodRetType resolvedServiceMethods] = [lt|import java.util.ArrayList;|]
-                      | otherwise = ""
+      mapImport | not $ null [() | TMap _ _ <- map methodRetType resolvedServiceMethods ] = [lt|import java.util.Map;|]
+                | otherwise = ""
+      listImport | not $ null [() | TList _ <- map methodRetType resolvedServiceMethods] = [lt|import java.util.List;|]
+                 | otherwise = ""
       dirName = joinPath $ map LT.unpack $ LT.split (== '.') $ LT.pack configPackage
       fileName =  dirName ++ "/" ++ (T.unpack className) ++ ".java"
 
   LT.writeFile fileName $ templ configFilePath [lt|
 package #{configPackage};
 
-#{hashMapImport}
-#{arrayListImport}
+#{mapImport}
+#{listImport}
 import org.msgpack.rpc.Client;
 import org.msgpack.rpc.loop.EventLoop;
 
@@ -312,9 +312,9 @@ genType TRaw =
 genType TString =
   [lt|String|]
 genType (TList typ) =
-  [lt|ArrayList<#{genWrapperType typ} >|]
+  [lt|List<#{genWrapperType typ} >|]
 genType (TMap typ1 typ2) =
-  [lt|HashMap<#{genType typ1}, #{genType typ2} >|]
+  [lt|Map<#{genType typ1}, #{genType typ2} >|]
 genType (TUserDef className params) =
   [lt|#{formatClassNameT className} #{associateBracket $ map genType params}|]
 genType (TTuple ts) =
@@ -364,9 +364,9 @@ genWrapperType TRaw =
 genWrapperType TString =
   [lt|String|]
 genWrapperType (TList typ) =
-  [lt|ArrayList<#{genWrapperType typ} >|]
+  [lt|List<#{genWrapperType typ} >|]
 genWrapperType (TMap typ1 typ2) =
-  [lt|HashMap<#{genWrapperType typ1}, #{genWrapperType typ2} >|]
+  [lt|Map<#{genWrapperType typ1}, #{genWrapperType typ2} >|]
 genWrapperType (TUserDef className params) =
   [lt|#{formatClassNameT className} #{associateBracket $ map genWrapperType params}|]
 genWrapperType (TTuple ts) =
