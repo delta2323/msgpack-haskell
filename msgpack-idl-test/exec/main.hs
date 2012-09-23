@@ -15,7 +15,7 @@ import qualified Language.MessagePack.IDL.CodeGen.Php as Php
 import qualified Language.MessagePack.IDL.CodeGen.Python as Python
 import qualified Language.MessagePack.IDL.CodeGen.Perl as Perl
 
-import Paths_msgpack_idl
+import Paths_msgpack_idl_test
 
 data MPIDL
   = Haskell

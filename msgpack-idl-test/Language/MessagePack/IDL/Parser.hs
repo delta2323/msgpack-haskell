@@ -11,4 +11,4 @@ import Text.Peggy.CodeGen.TH
 
 import Language.MessagePack.IDL.Syntax
 
-genDecs $(peggyFile "mpidl.peggy")
+genDecs $(peggyFile "mpidl-test.peggy")
