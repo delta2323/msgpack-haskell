@@ -1,4 +1,3 @@
-
 import System.Exit
 import System.FilePath
 import System.Directory
@@ -26,15 +25,3 @@ main = withDirectory "./test/" $ do
   exitcodes <- mapM generate idls
   print $ zip idls exitcodes
   exitWith $ M.mconcat exitcodes
-
-
-
-
-
-
-
-
-
-
-
-
