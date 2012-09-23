@@ -1,0 +1,53 @@
+testset graph {
+
+test setUp {
+  cli = graph(host, port);
+}
+
+test node_info {
+  edge_query = [["a", "b"], ["c", "d"], ["e", "f"]];
+  node_query = [["0", "1"], ["2", "3"]];
+  p = preset_query(edge_query, node_query);
+  in_edges = [0, 0];
+  out_edges = [0, 0];
+  node_info(p, in_edges, out_edges);
+}
+
+test create_node {
+  nid = create_node("name");
+  assert(nid == 0);
+}
+
+test remove_node {
+  name = "name";
+  nid = create_node(name);
+  assert(remove_node(name, nid) == 0);
+
+}
+
+test update_node {
+  name = "name";
+  nid = create_node(name);
+#  prop = {"key1" : "val1", "key2" : "val2"};
+  assert(update_node(name, nid, prop) == 0);
+}
+
+test create_edge {
+  name = "name";
+  src = create_node(name);
+  tgt = create_node(name);
+#  prop = {"key1" : "val1", "key2" : "val2"};
+  ei = edge_info(prop, src, tgt);
+  eid = create_edge("name", tgt, ei);
+}
+
+test create_edge {
+  name = "name";
+  src = create_node(name);
+  tgt = create_node(name);
+#  prop = {"key1" : "val1", "key2" : "val2"};
+  ei = edge_info(prop, src, tgt);
+  eid = create_edge(src, tgt, ei);
+}
+
+}

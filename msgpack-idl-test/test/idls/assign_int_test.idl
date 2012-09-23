@@ -1,0 +1,8 @@
+testset stat {
+
+test simple {
+  b = 10.0;
+  a = 10;
+}
+
+}

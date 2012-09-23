@@ -1,0 +1,82 @@
+testset stat {
+
+test setUp {
+  cli = stat(host, port);
+  window_size = 10;
+  cd = config_data(window_size);
+  cli.set_config("name", cd);
+}
+
+test get_config {
+  config = cli.get_config("name");
+  assert(config.window_size == window_size);
+}
+
+test stddev {
+  cli.push("name", "stddev", 1.0);
+  cli.push("name", "stddev", 2.0);
+  cli.push("name", "stddev", 3.0);
+  cli.push("name", "stddev", 4.0);
+  cli.push("name", "stddev", 5.0);
+  assert(cli.stddev("name", "stddev") == 2.0);
+}
+
+test sum {
+  cli.push("name", "sum", 1.0);
+  cli.push("name", "sum", 2.0);
+  cli.push("name", "sum", 3.0);
+  cli.push("name", "sum", 4.0);
+  cli.push("name", "sum", 5.0);
+  assert(cli.sum("name", "sum") == 15.0);
+}
+
+test max {
+  cli.push("name", "max", 1.0);
+  cli.push("name", "max", 2.0);
+  cli.push("name", "max", 3.0);
+  cli.push("name", "max", 4.0);
+  cli.push("name", "max", 5.0);
+  assert(cli.max("name", "max") == 5.0);
+}
+
+test min {
+  cli.push("name", "min", 1.0);
+  cli.push("name", "min", 2.0);
+  cli.push("name", "min", 3.0);
+  cli.push("name", "min", 4.0);
+  cli.push("name", "min", 5.0);
+  assert(cli.min("name", "min") == 1.0);
+}
+
+test entropy {
+  cli.push("name", "entropy", 1.0);
+  cli.push("name", "entropy", 2.0);
+  cli.push("name", "entropy", 3.0);
+  cli.push("name", "entropy", 4.0);
+  cli.push("name", "entropy", 5.0);
+  assert(cli.entropy("name", "entropy") == 0.0);
+}
+
+test moment {
+  cli.push("name", "moment", 1.0);
+  cli.push("name", "moment", 2.0);
+  cli.push("name", "moment", 3.0);
+  cli.push("name", "moment", 4.0);
+  cli.push("name", "moment", 5.0);
+  assert(cli.moment("name", "moment") == 0.0);
+}
+test save {
+  assert(cli.save("name", "stat.save_test.model") == True);
+}
+
+test load {
+  model_name = "stat.load_test.model";
+  cli.save("name", model_name);
+  assert(cli.load("name", model_name) == True);
+}
+
+test get_status {
+  cli.get_status("name");
+}
+
+}

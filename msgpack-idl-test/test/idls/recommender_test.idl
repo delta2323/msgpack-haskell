@@ -1,0 +1,97 @@
+testset recommender {
+
+test setUp {
+  cli = classifier(host, port);
+  method = "inverted_index";
+  converter = "{\n\"string_filter_types\":{}, \n\"string_filter_rules\":[], \n\"num_filter_types\":{}, \n\"num_filter_rules\":[], \n\"string_types\":{}, \n\"string_rules\":\n[{\"key\":\"*\", \"type\":\"space\", \n\"sample_weight\":\"bin\", \"global_weight\":\"bin\"}\n], \n\"num_types\":{}, \n\"num_rules\":[\n{\"key\":\"*\", \"type\":\"num\"}\n]\n}";
+  cd = config_data(method, converter);
+  cli.set_config("name", cd);
+}
+
+test get_config {
+  config = cli.get_config("name");
+  assert(config.method == "inverted_index");
+  assert(config.converter == converter);
+}
+
+test complete_row {
+  cli.clear_row("name", "complete_row");
+
+  string_values = [["key1", "val1"], ["key2", "val2"]];
+  num_values = [["key1", 1.0], ["key2", 2.0]];
+  d = datum(string_values, num_values);
+  cli.update_row("name", "complete_row", d);
+
+  d1 = cli.complete_row_from_id("name", "complete_row");
+  d2 = cli.complete_row_from_data("name", d);
+
+}
+
+test similar_row {
+  cli.clear_row("name", "similar_row");
+
+  string_values = [["key1", "val1"], ["key2", "val2"]];
+  num_values = [["key1", 1.0], ["key2", 2.0]];
+  d = datum(string_values, num_values);
+  cli.update_row("name", "similar_row", d);
+
+  s1 = cli.similar_row_from_id("name", "similar_row", 10);
+  s2 = cli.similar_row_from_data("name", d, 10);
+
+}
+
+test decode_row {
+  cli.clear_row("name", "decode_row");
+
+  string_values = [["key1", "val1"], ["key2", "val2"]];
+  num_values = [["key1", 1.0], ["key2", 2.0]];
+  d = datum(string_values, num_values);
+  cli.update_row("name", "decode_row", d);
+
+  decoded_row = cli.decode_row("name", "decode_row");
+  assert(d == decoded_row);
+}
+
+test get_row {
+  cli.clear("name");
+
+  string_values = [["key1", "val1"], ["key2", "val2"]];
+  num_values = [["key1", 1.0], ["key2", 2.0]];
+  d = datum(string_values, num_values);
+  cli.update_row("name", "get_row", d);
+
+  row_names = cli.get_all_rows("name");
+  assert(row_names == ["get_row"]);
+}
+
+test clear {
+  cli.clear("name");
+}
+
+test calcs {
+  string_values = [["key1", "val1"], ["key2", "val2"]];
+  num_values = [["key1", 1.0], ["key2", 2.0]];
+  d = datum(string_values, num_values);
+  assert(cli.similarity("name", d, d) == 1);
+  assert(cli.l2norm("name", d) == 1);
+}
+
+test clear {
+  cli.clear("name");
+}
+
+test save {
+  assert(cli.save("name", "classifier.save_test.model") == True);
+}
+
+test load {
+  model_name = "classifier.load_test.model";
+  cli.save("name", model_name);
+  assert(cli.load("name", model_name) == True);
+}
+
+test get_status {
+  cli.get_status("name");
+}
+
+}
