@@ -26,6 +26,7 @@ data Expression
     }
   | Var String
   | ConstInt Int
+  | ConstDouble Double
   | ConstString String
   | ConstList [Expression]
   deriving (Eq, Show)

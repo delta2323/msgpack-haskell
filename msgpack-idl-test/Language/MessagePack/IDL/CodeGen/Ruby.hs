@@ -89,6 +89,7 @@ genExpression Call {..} =
   [lt|#{methodName}(#{args_text})|]
 genExpression (Var v) = [lt|#{v}|]
 genExpression (ConstInt n) = [lt|#{show n}|]
+genExpression (ConstDouble x) = [lt|#{show x}|]
 genExpression (ConstString s) = [lt|"#{s}"|]
 genExpression (ConstList ls) = 
   let lists = LT.intercalate [lt|, |] $ map genExpression ls in

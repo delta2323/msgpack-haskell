@@ -12,6 +12,7 @@ statement :: Statement
 expression :: Expression
   = call { $1 }
   / ident { Var $1 }
+  / const_double { ConstDouble $1 }
   / const_int { ConstInt $1 }
   / const_string { ConstString $1 }
   / const_list { ConstList $1 }
@@ -24,6 +25,9 @@ const_list :: [Expression]
 
 const_int ::: Int
   = [0-9]+ { read $1 }
+
+const_double ::: Double
+  = [0-9]+ "." [0-9]+ { read ($1 ++ "." ++ $2)}
 
 const_string :: String
   = '\"' literal* '\"'    { concat $1 }

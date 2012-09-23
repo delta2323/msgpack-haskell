@@ -64,6 +64,7 @@ genExpression :: Expression -> LT.Text
 genExpression (Call fun args) = [lt|self.#{fun}(#{genArgs args})|]
 genExpression (Var v) = [lt|#{v}|]
 genExpression (ConstInt n) = [lt|#{show n}|]
+genExpression (ConstDouble x) = [lt|#{show x}|]
 genExpression (ConstString c) = [lt|"#{c}"|]
 genExpression (ConstList l) = [lt|[#{genArgs l}]|]
 
